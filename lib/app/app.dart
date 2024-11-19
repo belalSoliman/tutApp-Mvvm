@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tutapp/navigation_observal.dart';
+import 'package:tutapp/presentaion/resources/routes_manager.dart';
 import 'package:tutapp/presentaion/resources/theme_manager.dart';
 
 class MyApp extends StatefulWidget {
@@ -11,12 +12,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final ScreenCountObserver _screenCountObserver = ScreenCountObserver();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: RoutesManager.generateRoute,
       title: 'TutApp',
       theme: getAppTheme(),
-      home: Container(),
+      initialRoute: RoutesManager.splash,
+      navigatorObservers: [_screenCountObserver],
     );
   }
 }
