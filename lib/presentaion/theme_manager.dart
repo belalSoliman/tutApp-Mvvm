@@ -58,20 +58,27 @@ ThemeData getAppTheme() {
 
     //input decoration theme(text form field)
     inputDecorationTheme: InputDecorationTheme(
+      contentPadding: EdgeInsets.all(AppSize.s8),
+      hintStyle: getRegularTextStyle(
+          fontSize: FontSizes.medium, color: ColorManager.grey),
+      labelStyle: getRegularTextStyle(
+          fontSize: FontSizes.medium, color: ColorManager.grey),
+      errorStyle: getRegularTextStyle(
+          fontSize: FontSizes.medium, color: ColorManager.errorColor),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppSize.s12),
         borderSide: BorderSide(color: ColorManager.primaryColor),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSize.s12),
+        borderRadius: BorderRadius.all(Radius.circular(AppSize.s8)),
         borderSide: BorderSide(color: ColorManager.primaryColor),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSize.s12),
-        borderSide: BorderSide(color: ColorManager.primaryColor),
+        borderRadius: BorderRadius.all(Radius.circular(AppSize.s8)),
+        borderSide: BorderSide(color: ColorManager.grey),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSize.s12),
+        borderRadius: BorderRadius.all(Radius.circular(AppSize.s8)),
         borderSide: BorderSide(color: ColorManager.errorColor),
       ),
       focusedErrorBorder: OutlineInputBorder(
