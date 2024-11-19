@@ -1,6 +1,6 @@
 //function that return texts styles
 import 'package:flutter/cupertino.dart';
-import 'package:tutapp/presentaion/font_manager.dart';
+import 'package:tutapp/presentaion/resources/font_manager.dart';
 
 TextStyle _getTextStyle(double fontSize, FontWeight fontWeight, Color color) {
   return TextStyle(
