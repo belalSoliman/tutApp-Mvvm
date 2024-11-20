@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tutapp/presentaion/resources/assets_manager.dart';
 import 'package:tutapp/presentaion/resources/color_manager.dart';
 import 'package:tutapp/presentaion/resources/strings_manager.dart';
+import 'package:tutapp/presentaion/resources/values_manager.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({super.key});
@@ -59,29 +60,73 @@ class _OnBoardingViewState extends State<OnBoardingView> {
             });
           },
           itemBuilder: (context, index) {
-            return Column(
-              children: [
-                Text(
-                  slides[index].title,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  slides[index].description,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: ColorManager.grey,
-                  ),
-                ),
-                SvgPicture.asset(
-                  slides[index].image,
-                  height: 300,
-                ),
-              ],
-            );
+            return OnBoardingItem(slides: slides[index]);
           }),
+      bottomSheet: Container(
+        color: ColorManager.white,
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppMargin.m16),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    StringsManager.onBoardingSkip,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ),
+            //indicator widget
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OnBoardingItem extends StatelessWidget {
+  const OnBoardingItem({
+    super.key,
+    required this.slides,
+  });
+
+  final SliderObject slides;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: AppMargin.m12,
+        ),
+        Text(
+          slides.title,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        SizedBox(
+          height: AppMargin.m12,
+        ),
+        Text(
+          slides.description,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        SizedBox(
+          height: AppMargin.m40,
+        ),
+        SvgPicture.asset(
+          slides.image,
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.4,
+        ),
+      ],
     );
   }
 }
