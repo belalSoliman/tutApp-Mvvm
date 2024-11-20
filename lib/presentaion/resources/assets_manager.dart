@@ -5,4 +5,7 @@ class ImageAssets {
   static const String onBoarding2 = 'assets/images/onboarding_logo2.svg';
   static const String onBoarding3 = 'assets/images/onboarding_logo3.svg';
   static const String onBoarding4 = 'assets/images/onboarding_logo4.svg';
+  static const String onBoardingDots = "assets/images/solid_circle_ic.svg";
+  static const String onBoardingDotsEmpty =
+      "assets/images/hollow_cirlce_ic.svg";
 }
