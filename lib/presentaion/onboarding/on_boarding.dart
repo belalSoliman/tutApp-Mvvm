@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tutapp/presentaion/onboarding/widgets/on_boarding_item.dart';
 import 'package:tutapp/presentaion/resources/assets_manager.dart';
 import 'package:tutapp/presentaion/resources/color_manager.dart';
+import 'package:tutapp/presentaion/resources/routes_manager.dart';
 import 'package:tutapp/presentaion/resources/strings_manager.dart';
 import 'package:tutapp/presentaion/resources/values_manager.dart';
 
@@ -64,7 +66,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
           }),
       bottomSheet: Container(
         color: ColorManager.white,
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: MediaQuery.of(context).size.height * 0.14,
         child: Column(
           children: [
             Padding(
@@ -72,7 +74,11 @@ class _OnBoardingViewState extends State<OnBoardingView> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //navigate to next screen
+                    Navigator.of(context)
+                        .pushReplacementNamed(RoutesManager.logIn);
+                  },
                   child: Text(
                     StringsManager.onBoardingSkip,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -83,11 +89,82 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                 ),
               ),
             ),
-            //indicator widget
+            //widget indicator for pageview
+            _gitBottomIndicator(),
           ],
         ),
       ),
     );
+  }
+
+  Widget _gitBottomIndicator() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      //left arrow
+      Padding(
+        padding: EdgeInsets.only(left: AppMargin.m16),
+        child: InkWell(
+          onTap: () {
+            _pageController.previousPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          child: SizedBox(
+            width: AppMargin.m24,
+            height: AppMargin.m24,
+            child: SvgPicture.asset(
+              ImageAssets.onBoardingBack,
+              width: AppMargin.m24,
+              height: AppMargin.m24,
+            ),
+          ),
+        ),
+      ),
+      Row(
+        children: [
+          for (int i = 0; i < slides.length; i++)
+            Padding(
+              padding: EdgeInsets.only(right: AppMargin.m8),
+              child: Container(
+                width: currentIndex == i ? AppMargin.m16 : AppMargin.m8,
+                height: AppMargin.m8,
+                decoration: BoxDecoration(
+                  color: currentIndex == i
+                      ? ColorManager.primaryColor
+                      : ColorManager.grey,
+                  borderRadius: BorderRadius.circular(AppMargin.m8),
+                ),
+              ),
+            ),
+        ],
+      ),
+
+      //right arrow
+      Padding(
+        padding: EdgeInsets.only(right: AppMargin.m16),
+        child: InkWell(
+          onTap: () {
+            if (currentIndex == slides.length - 1) {
+              //navigate to next screen
+            } else {
+              _pageController.nextPage(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          },
+          child: SizedBox(
+            width: AppMargin.m24,
+            height: AppMargin.m24,
+            child: SvgPicture.asset(
+              ImageAssets.onBoardingNext,
+              width: AppMargin.m24,
+              height: AppMargin.m24,
+            ),
+          ),
+        ),
+      ),
+    ]);
   }
 }
 
