@@ -38,7 +38,7 @@ class OnBoardingItem extends StatelessWidget {
         SvgPicture.asset(
           slides.image,
           width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.4,
         ),
       ],
     );

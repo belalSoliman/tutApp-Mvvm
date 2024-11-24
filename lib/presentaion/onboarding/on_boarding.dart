@@ -66,11 +66,11 @@ class _OnBoardingViewState extends State<OnBoardingView> {
           }),
       bottomSheet: Container(
         color: ColorManager.white,
-        height: MediaQuery.of(context).size.height * 0.14,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.all(AppMargin.m16),
+              padding: const EdgeInsets.only(right: AppMargin.m16),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -98,73 +98,74 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   }
 
   Widget _gitBottomIndicator() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      //left arrow
-      Padding(
-        padding: EdgeInsets.only(left: AppMargin.m16),
-        child: InkWell(
-          onTap: () {
-            _pageController.previousPage(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          },
-          child: SizedBox(
-            width: AppMargin.m24,
-            height: AppMargin.m24,
-            child: SvgPicture.asset(
-              ImageAssets.onBoardingBack,
-              width: AppMargin.m24,
-              height: AppMargin.m24,
-            ),
-          ),
-        ),
-      ),
-      Row(
-        children: [
-          for (int i = 0; i < slides.length; i++)
-            Padding(
-              padding: EdgeInsets.only(right: AppMargin.m8),
-              child: Container(
-                width: currentIndex == i ? AppMargin.m16 : AppMargin.m8,
-                height: AppMargin.m8,
-                decoration: BoxDecoration(
-                  color: currentIndex == i
-                      ? ColorManager.primaryColor
-                      : ColorManager.grey,
-                  borderRadius: BorderRadius.circular(AppMargin.m8),
-                ),
-              ),
-            ),
-        ],
-      ),
-
-      //right arrow
-      Padding(
-        padding: EdgeInsets.only(right: AppMargin.m16),
-        child: InkWell(
-          onTap: () {
-            if (currentIndex == slides.length - 1) {
-              //navigate to next screen
-            } else {
-              _pageController.nextPage(
+    return Container(
+      height: MediaQuery.sizeOf(context).height * 0.05,
+      color: ColorManager.primaryColor,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        //left arrow
+        Padding(
+          padding: EdgeInsets.only(left: AppMargin.m16),
+          child: InkWell(
+            onTap: () {
+              _pageController.previousPage(
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
               );
-            }
-          },
-          child: SizedBox(
-            width: AppMargin.m24,
-            height: AppMargin.m24,
-            child: SvgPicture.asset(
-              ImageAssets.onBoardingNext,
+            },
+            child: SizedBox(
               width: AppMargin.m24,
               height: AppMargin.m24,
+              child: SvgPicture.asset(
+                ImageAssets.onBoardingBack,
+                width: AppMargin.m24,
+                height: AppMargin.m24,
+                color:
+                    currentIndex == 0 ? ColorManager.grey : ColorManager.black,
+              ),
             ),
           ),
         ),
-      ),
-    ]);
+        Row(
+          children: [
+            for (int i = 0; i < slides.length; i++)
+              Padding(
+                  padding: EdgeInsets.only(right: AppMargin.m8),
+                  child: SvgPicture.asset(ImageAssets.onBoardingDots,
+                      width: AppMargin.m8,
+                      height: AppMargin.m8,
+                      color: currentIndex == i
+                          ? ColorManager.white
+                          : ColorManager.grey)),
+          ],
+        ),
+
+        //right arrow
+        Padding(
+          padding: EdgeInsets.only(right: AppMargin.m16),
+          child: InkWell(
+            onTap: () {
+              if (currentIndex == slides.length - 1) {
+                //navigate to next screen
+                Navigator.of(context).pushReplacementNamed(RoutesManager.logIn);
+              } else {
+                _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+            child: SizedBox(
+              width: AppMargin.m24,
+              height: AppMargin.m24,
+              child: SvgPicture.asset(ImageAssets.onBoardingNext,
+                  width: AppMargin.m24,
+                  height: AppMargin.m24,
+                  color: ColorManager.white),
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 }
 
