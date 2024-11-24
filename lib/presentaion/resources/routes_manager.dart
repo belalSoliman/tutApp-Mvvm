@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart'; // Import for defaultTargetPlatform
 import 'package:tutapp/presentaion/forget_password/forget_pass.dart';
 import 'package:tutapp/presentaion/home/home_view.dart';
 import 'package:tutapp/presentaion/login/login.dart';
-import 'package:tutapp/presentaion/onboarding/on_boarding.dart';
+import 'package:tutapp/presentaion/onboarding/view/on_boarding.dart';
 import 'package:tutapp/presentaion/siginup/sign_up_view.dart';
 import 'package:tutapp/presentaion/splash/splash_view.dart';
 

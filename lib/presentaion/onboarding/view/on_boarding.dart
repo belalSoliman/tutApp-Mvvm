@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tutapp/presentaion/onboarding/widgets/on_boarding_item.dart';
+import 'package:tutapp/presentaion/onboarding/view/widgets/on_boarding_item.dart';
 import 'package:tutapp/presentaion/resources/assets_manager.dart';
 import 'package:tutapp/presentaion/resources/color_manager.dart';
 import 'package:tutapp/presentaion/resources/routes_manager.dart';
