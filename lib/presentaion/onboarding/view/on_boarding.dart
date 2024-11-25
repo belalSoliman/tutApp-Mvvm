@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tutapp/domain/models.dart';
 import 'package:tutapp/presentaion/onboarding/view/widgets/on_boarding_item.dart';
+import 'package:tutapp/presentaion/onboarding/view_model/on_boarding_view_model.dart';
 import 'package:tutapp/presentaion/resources/assets_manager.dart';
 import 'package:tutapp/presentaion/resources/color_manager.dart';
 import 'package:tutapp/presentaion/resources/routes_manager.dart';
@@ -17,29 +19,24 @@ class OnBoardingView extends StatefulWidget {
 
 class _OnBoardingViewState extends State<OnBoardingView> {
   final PageController _pageController = PageController();
-  int currentIndex = 0;
-  final List<SliderObject> slides = [
-    SliderObject(
-      ImageAssets.onBoarding1,
-      StringsManager.onBoardingTitle1,
-      StringsManager.onBoardingDescription1,
-    ),
-    SliderObject(
-      ImageAssets.onBoarding2,
-      StringsManager.onBoardingTitle2,
-      StringsManager.onBoardingDescription2,
-    ),
-    SliderObject(
-      ImageAssets.onBoarding3,
-      StringsManager.onBoardingTitle3,
-      StringsManager.onBoardingDescription3,
-    ),
-    SliderObject(
-      ImageAssets.onBoarding4,
-      StringsManager.onBoardingTitle4,
-      StringsManager.onBoardingDescription4,
-    ),
-  ];
+  final OnBoardingViewModel _viewModel = OnBoardingViewModel();
+
+  void _bind() {
+    _viewModel.start();
+  }
+
+  @override
+  void initState() {
+    _bind();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,127 +49,132 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         ),
         elevation: 0,
       ),
-      body: PageView.builder(
-          controller: _pageController,
-          itemCount: slides.length,
-          onPageChanged: (index) {
-            setState(() {
-              currentIndex = index;
-              print(currentIndex);
-            });
-          },
-          itemBuilder: (context, index) {
-            return OnBoardingItem(slides: slides[index]);
-          }),
-      bottomSheet: Container(
-        color: ColorManager.white,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: AppMargin.m16),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    //navigate to next screen
-                    Navigator.of(context)
-                        .pushReplacementNamed(RoutesManager.logIn);
-                  },
-                  child: Text(
-                    StringsManager.onBoardingSkip,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: ColorManager.primaryColor,
-                        ),
-                    textAlign: TextAlign.end,
-                  ),
+      body: StreamBuilder<List<SliderObject>>(
+        stream: _viewModel.outPutSliderObject,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final slides = snapshot.data!;
+            return PageView.builder(
+              controller: _pageController,
+              itemCount: slides.length,
+              onPageChanged: (index) {
+                _viewModel.onpageChanged(index);
+              },
+              itemBuilder: (context, index) {
+                return OnBoardingItem(slides: slides[index]);
+              },
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+      bottomSheet: _getBottomSheet(),
+    );
+  }
+
+  Widget _getBottomSheet() {
+    return Container(
+      color: ColorManager.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: AppMargin.m16),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(RoutesManager.logIn);
+                },
+                child: Text(
+                  StringsManager.onBoardingSkip,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: ColorManager.primaryColor,
+                      ),
+                  textAlign: TextAlign.end,
                 ),
               ),
             ),
-            //widget indicator for pageview
-            _gitBottomIndicator(),
-          ],
-        ),
+          ),
+          _getBottomIndicator(),
+        ],
       ),
     );
   }
 
-  Widget _gitBottomIndicator() {
+  Widget _getBottomIndicator() {
     return Container(
-      height: MediaQuery.sizeOf(context).height * 0.05,
+      height: MediaQuery.of(context).size.height * 0.05,
       color: ColorManager.primaryColor,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        //left arrow
-        Padding(
-          padding: EdgeInsets.only(left: AppMargin.m16),
-          child: InkWell(
-            onTap: () {
-              _pageController.previousPage(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            },
-            child: SizedBox(
-              width: AppMargin.m24,
-              height: AppMargin.m24,
-              child: SvgPicture.asset(
-                ImageAssets.onBoardingBack,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left arrow
+          Padding(
+            padding: EdgeInsets.only(left: AppMargin.m16),
+            child: InkWell(
+              onTap: () {
+                _viewModel.goBack(_pageController);
+              },
+              child: SizedBox(
                 width: AppMargin.m24,
                 height: AppMargin.m24,
-                color:
-                    currentIndex == 0 ? ColorManager.grey : ColorManager.black,
+                child: SvgPicture.asset(
+                  ImageAssets.onBoardingBack,
+                  width: AppMargin.m24,
+                  height: AppMargin.m24,
+                  color: _viewModel.currentIndex == 0
+                      ? ColorManager.grey
+                      : ColorManager.black,
+                ),
               ),
             ),
           ),
-        ),
-        Row(
-          children: [
-            for (int i = 0; i < slides.length; i++)
-              Padding(
-                  padding: EdgeInsets.only(right: AppMargin.m8),
-                  child: SvgPicture.asset(ImageAssets.onBoardingDots,
-                      width: AppMargin.m8,
-                      height: AppMargin.m8,
-                      color: currentIndex == i
-                          ? ColorManager.white
-                          : ColorManager.grey)),
-          ],
-        ),
-
-        //right arrow
-        Padding(
-          padding: EdgeInsets.only(right: AppMargin.m16),
-          child: InkWell(
-            onTap: () {
-              if (currentIndex == slides.length - 1) {
-                //navigate to next screen
-                Navigator.of(context).pushReplacementNamed(RoutesManager.logIn);
-              } else {
-                _pageController.nextPage(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              }
-            },
-            child: SizedBox(
-              width: AppMargin.m24,
-              height: AppMargin.m24,
-              child: SvgPicture.asset(ImageAssets.onBoardingNext,
-                  width: AppMargin.m24,
-                  height: AppMargin.m24,
-                  color: ColorManager.white),
+          // Dots indicator
+          Row(
+            children: List.generate(
+              _viewModel.slides.length,
+              (index) => Padding(
+                padding: EdgeInsets.only(right: AppMargin.m8),
+                child: SvgPicture.asset(
+                  ImageAssets.onBoardingDots,
+                  width: AppMargin.m8,
+                  height: AppMargin.m8,
+                  color: _viewModel.currentIndex == index
+                      ? ColorManager.white
+                      : ColorManager.grey,
+                ),
+              ),
             ),
           ),
-        ),
-      ]),
+          // Right arrow
+          Padding(
+            padding: EdgeInsets.only(right: AppMargin.m16),
+            child: InkWell(
+              onTap: () {
+                if (_viewModel.currentIndex == _viewModel.slides.length - 1) {
+                  Navigator.of(context)
+                      .pushReplacementNamed(RoutesManager.logIn);
+                } else {
+                  _viewModel.goNext(_pageController);
+                }
+              },
+              child: SizedBox(
+                width: AppMargin.m24,
+                height: AppMargin.m24,
+                child: SvgPicture.asset(
+                  ImageAssets.onBoardingNext,
+                  width: AppMargin.m24,
+                  height: AppMargin.m24,
+                  color: ColorManager.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
-}
-
-class SliderObject {
-  final String image;
-  final String title;
-  final String description;
-
-  SliderObject(this.image, this.title, this.description);
 }
