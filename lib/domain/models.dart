@@ -13,3 +13,6 @@ class SliderViewObject {
   int currentIndex;
   SliderViewObject(this.sliderObject, this.numberOfSliders, this.currentIndex);
 }
+
+//login models
+
